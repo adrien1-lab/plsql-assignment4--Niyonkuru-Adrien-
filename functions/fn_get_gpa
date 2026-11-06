@@ -1,0 +1,48 @@
+--
+CREATE OR REPLACE FUNCTION fn_get_gpa (p_student_id IN students.student_id%TYPE)
+    RETURN NUMBER
+IS
+    -- Explicit cursor: every graded enrollment row of the student.
+    CURSOR c_grades IS
+        SELECT grade
+        FROM   enrollments
+        WHERE  student_id = p_student_id
+        AND    grade IS NOT NULL;
+
+    v_points    reg_types.t_points_map;   -- associative array: letter -> points
+    v_grade     enrollments.grade%TYPE;
+    v_sum       NUMBER := 0;
+    v_count     PLS_INTEGER := 0;
+    v_student_id students.student_id%TYPE;
+BEGIN
+    -- If the student does not exist this SELECT INTO raises NO_DATA_FOUND,
+    -- which is translated into a meaningful error below.
+    SELECT student_id
+    INTO   v_student_id
+    FROM   students
+    WHERE  student_id = p_student_id;
+
+    v_points := reg_types.get_points_map();   -- standard letter -> points map
+
+    -- Cursor FOR loop: OPEN, FETCH (per row) and CLOSE are managed automatically.
+    FOR r IN c_grades LOOP
+        v_grade := r.grade;
+        IF v_points.EXISTS(v_grade) THEN
+            v_sum   := v_sum + v_points(v_grade);
+            v_count := v_count + 1;
+        END IF;
+    END LOOP;
+
+    IF v_count = 0 THEN
+        RETURN NULL;   -- student exists, but nothing graded yet
+    END IF;
+
+    RETURN ROUND(v_sum / v_count, 2);
+
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        RAISE_APPLICATION_ERROR(
+            -20041,
+            'Student ' || p_student_id || ' does not exist. GPA cannot be computed.');
+END fn_get_gpa;
+/
