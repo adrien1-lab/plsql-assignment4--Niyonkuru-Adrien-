@@ -1,0 +1,29 @@
+--
+CREATE OR REPLACE FUNCTION fn_get_student_summary (
+    p_student_id IN students.student_id%TYPE
+) RETURN reg_types.t_student_rec
+IS
+    v_summary reg_types.t_student_rec;
+BEGIN
+    -- SELECT ... INTO a record: the select list must match the record fields
+    -- in number, order and compatible datatype.
+    SELECT s.student_id,
+           s.full_name,
+           s.email,
+           d.dept_name,
+           s.status,
+           s.enrollment_date
+    INTO   v_summary
+    FROM   students s
+           JOIN departments d ON d.dept_id = s.dept_id
+    WHERE  s.student_id = p_student_id;
+
+    RETURN v_summary;
+
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        RAISE_APPLICATION_ERROR(
+            -20043,
+            'Student ' || p_student_id || ' does not exist. No summary available.');
+END fn_get_student_summary;
+/
