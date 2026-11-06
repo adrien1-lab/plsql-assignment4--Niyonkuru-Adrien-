@@ -84,6 +84,6 @@ plsql-assignment4-<StudentID>/
 
 
 
-## 5. AI use disclosure (required by the assignment)
+## 5. AI use disclosure 
 
 > **AI assistance:** an AI assistant (Z.ai GLM) was used to help draft the initial code.
