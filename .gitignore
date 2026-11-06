@@ -1,1 +1,18 @@
+# ---- OS junk ----
+.DS_Store
+Thumbs.db
+desktop.ini
 
+# ---- Editors / IDEs ----
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# ---- SQL*Plus / tooling output ----
+*.lst          # spool files (SET SPOOL ... .lst)
+*.log
+*.trc
+*.tmp
+spool*.txt
+spool*.log
