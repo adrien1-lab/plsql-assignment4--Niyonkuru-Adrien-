@@ -10,7 +10,7 @@ DROP SEQUENCE seq_courses;
 DROP SEQUENCE seq_enrollments;
 
 -- DEPARTMENTS  : academic departments of the university
---------------------------------------------------------------------------------
+
 CREATE TABLE departments (
     dept_id     NUMBER(4)      CONSTRAINT pk_departments PRIMARY KEY,
     dept_name   VARCHAR2(60)   CONSTRAINT nn_dept_name  NOT NULL,
@@ -19,9 +19,8 @@ CREATE TABLE departments (
     CONSTRAINT uq_departments_name UNIQUE (dept_name)
 );
 
---------------------------------------------------------------------------------
 -- STUDENTS  : registered students; every student belongs to one department
---------------------------------------------------------------------------------
+
 CREATE TABLE students (
     student_id      NUMBER(6)     CONSTRAINT pk_students PRIMARY KEY,
     full_name       VARCHAR2(100) CONSTRAINT nn_stu_name  NOT NULL,
@@ -34,9 +33,9 @@ CREATE TABLE students (
     CONSTRAINT ck_students_status CHECK (status IN ('ACTIVE', 'PROBATION', 'GRADUATED', 'WITHDRAWN'))
 );
 
---------------------------------------------------------------------------------
+
 -- COURSES  : courses offered; every course belongs to one department
---------------------------------------------------------------------------------
+
 CREATE TABLE courses (
     course_id   NUMBER(6)     CONSTRAINT pk_courses PRIMARY KEY,
     course_code VARCHAR2(12)  CONSTRAINT nn_crs_code  NOT NULL,
@@ -48,8 +47,9 @@ CREATE TABLE courses (
     CONSTRAINT ck_courses_credits  CHECK (credits  BETWEEN 1 AND 6),
     CONSTRAINT ck_courses_capacity CHECK (capacity > 0),
     CONSTRAINT fk_courses_dept     FOREIGN KEY (dept_id) REFERENCES departments (dept_id)
-);-- DEPARTMENTS  : academic departments of the university
---------------------------------------------------------------------------------
+);
+-- DEPARTMENTS  : academic departments of the university
+
 CREATE TABLE departments (
     dept_id     NUMBER(4)      CONSTRAINT pk_departments PRIMARY KEY,
     dept_name   VARCHAR2(60)   CONSTRAINT nn_dept_name  NOT NULL,
@@ -58,9 +58,9 @@ CREATE TABLE departments (
     CONSTRAINT uq_departments_name UNIQUE (dept_name)
 );
 
---------------------------------------------------------------------------------
+
 -- STUDENTS  : registered students; every student belongs to one department
---------------------------------------------------------------------------------
+
 CREATE TABLE students (
     student_id      NUMBER(6)     CONSTRAINT pk_students PRIMARY KEY,
     full_name       VARCHAR2(100) CONSTRAINT nn_stu_name  NOT NULL,
