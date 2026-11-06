@@ -1,0 +1,85 @@
+--
+
+CREATE OR REPLACE PACKAGE reg_types AS
+
+    
+    -- RECORD TYPES (user-defined records - requirement 1)
+
+
+    -- One full student summary (built with a join of students + departments).
+    TYPE t_student_rec IS RECORD (
+        student_id      NUMBER,
+        full_name       VARCHAR2(100),
+        email           VARCHAR2(120),
+        dept_name       VARCHAR2(60),
+        status          VARCHAR2(12),
+        enrollment_date DATE
+    );
+
+    -- One row of a "grade upload" batch: which enrollment gets which score.
+    TYPE t_grade_upload_rec IS RECORD (
+        enroll_id  NUMBER,
+        score      NUMBER
+    );
+
+    -- One row of a course roster.
+    TYPE t_roster_rec IS RECORD (
+        student_id  NUMBER,
+        full_name   VARCHAR2(100),
+        email       VARCHAR2(120),
+        grade       VARCHAR2(2)
+    );
+
+ 
+    -- NESTED TABLE TYPES (unbounded collections - requirement 2)
+
+
+    TYPE t_student_tab       IS TABLE OF t_student_rec;       -- collection of records
+    TYPE t_grade_upload_tab  IS TABLE OF t_grade_upload_rec;  -- drives FORALL bulk updates
+    TYPE t_roster_tab        IS TABLE OF t_roster_rec;        -- BULK COLLECT target (LIMIT batches)
+    TYPE t_num_tab           IS TABLE OF NUMBER;              -- list of ids / numbers
+
+   
+    -- VARRAY TYPE (fixed maximum size - requirement 2)
+
+
+    -- The ordered grade scale. A VARRAY is appropriate because the scale has
+    -- a fixed maximum size and always keeps its order (A is element 1 ...).
+    TYPE t_grade_varray IS VARRAY(8) OF VARCHAR2(2);
+
+ 
+    -- ASSOCIATIVE ARRAY TYPES (INDEX BY - requirement 2)
+ 
+
+    -- grade letter -> grade points, used for GPA calculation.
+    TYPE t_points_map IS TABLE OF NUMBER INDEX BY VARCHAR2(2);
+
+    -- grade letter -> number of students, used for grade distribution.
+    TYPE t_count_map IS TABLE OF NUMBER INDEX BY VARCHAR2(2);
+
+ 
+    -- Helper: returns the standard grade-point map, pre-filled.
+    -- Associative arrays cannot be returned to SQL, only to PL/SQL.
+   
+    FUNCTION get_points_map RETURN t_points_map;
+
+END reg_types;
+/
+
+CREATE OR REPLACE PACKAGE BODY reg_types AS
+
+    FUNCTION get_points_map RETURN t_points_map IS
+        v_map t_points_map;
+    BEGIN
+        v_map('A')  := 4.0;
+        v_map('B+') := 3.5;
+        v_map('B')  := 3.0;
+        v_map('C+') := 2.5;
+        v_map('C')  := 2.0;
+        v_map('D')  := 1.0;
+        v_map('F')  := 0.0;
+        RETURN v_map;
+    END get_points_map;
+
+END reg_types;
+/
