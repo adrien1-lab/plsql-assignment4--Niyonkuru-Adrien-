@@ -1,4 +1,4 @@
-
+--
 PROMPT Compiling function FN_COURSE_AVERAGE ...
 
 CREATE OR REPLACE FUNCTION fn_course_average (
@@ -32,3 +32,4 @@ EXCEPTION
             'Course ' || p_course_id || ' does not exist. Cannot compute the average.');
 END fn_course_average;
 /
+
