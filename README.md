@@ -51,14 +51,14 @@ plsql-assignment4-<StudentID>/
 ├── .gitignore
 ├── 00_schema/
 │   ├── 01_create_tables.sql       # tables, relationships, constraints, sequences
-│   ├── 02_insert_sample_data.sql  # realistic sample data (4/12/7/18 rows)
+│   ├── 02_insert_sample_data.sql  # realistic sample data 
 │   └── 03_create_common_types.sql # REG_TYPES: shared RECORD + COLLECTION types
-├── 01_procedures/                 # one file per stored procedure (9 procedures)
-├── 02_functions/                  # one file per stored function (5 functions)
+├── 01_procedures/                 # one file per stored procedure 
+├── 02_functions/                  # one file per stored function 
 ├── 03_tests/
-│   ├── test_success_cases.sql     # T01–T14 happy-path tests
-│   └── test_error_cases.sql       # E01–E11 exception-handling tests
-├── screenshots/                   # <test_name>_output.png (see docs/SCREENSHOT_GUIDE.md)
+│   ├── test_success_cases.sql     
+│   └── test_error_cases.sql      
+├── screenshots/                   
 └── docs/
     ├── IMPLEMENTATION_NOTES.md    # implementation + performance explanation
     ├── SCREENSHOT_GUIDE.md        # exactly what to capture and how to name it
