@@ -1,0 +1,38 @@
+__
+CREATE OR REPLACE FUNCTION fn_calculate_grade (p_score IN NUMBER)
+    RETURN VARCHAR2
+IS
+    -- User-defined exception: raised when the score is outside the valid range.
+    e_invalid_score EXCEPTION;
+
+    v_grade VARCHAR2(2);
+BEGIN
+    -- Guard clause: refuse to grade nonsense instead of returning a misleading letter.
+    IF p_score IS NULL OR p_score NOT BETWEEN 0 AND 100 THEN
+        RAISE e_invalid_score;
+    ELSIF p_score >= 90 THEN
+        v_grade := 'A';
+    ELSIF p_score >= 85 THEN
+        v_grade := 'B+';
+    ELSIF p_score >= 80 THEN
+        v_grade := 'B';
+    ELSIF p_score >= 75 THEN
+        v_grade := 'C+';
+    ELSIF p_score >= 70 THEN
+        v_grade := 'C';
+    ELSIF p_score >= 60 THEN
+        v_grade := 'D';
+    ELSE
+        v_grade := 'F';
+    END IF;
+
+    RETURN v_grade;
+
+EXCEPTION
+    WHEN e_invalid_score THEN
+        RAISE_APPLICATION_ERROR(
+            -20040,
+            'Invalid score [' || NVL(TO_CHAR(p_score), 'NULL') ||
+            ']. A score must be a number between 0 and 100.');
+END fn_calculate_grade;
+/
